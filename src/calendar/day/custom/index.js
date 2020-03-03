@@ -1,9 +1,10 @@
-import React, { Component } from 'react';
-import { Text, TouchableOpacity } from 'react-native';
+import React, {Component} from 'react';
+import {TouchableOpacity, Text} from 'react-native';
 import PropTypes from 'prop-types';
 
 import styleConstructor from './style';
-import { shouldUpdate } from '../../../component-updater';
+import {shouldUpdate} from '../../../component-updater';
+
 
 class Day extends Component {
   static displayName = 'IGNORE';
@@ -88,9 +89,7 @@ class Day extends Component {
         accessibilityRole={isDisabled ? undefined : 'button'}
         accessibilityLabel={this.props.accessibilityLabel}
       >
-        <Text allowFontScaling={false} style={textStyle}>
-          {String(this.props.formatNumber ? this.props.formatNumber(this.props.children) : this.props.children)}
-        </Text>
+        <Text allowFontScaling={false} style={textStyle}>{String(this.props.formatNumber ? this.props.formatNumber(this.props.children) : this.props.children)}</Text>
       </TouchableOpacity>
     );
   }
