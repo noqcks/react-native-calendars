@@ -1,30 +1,31 @@
-import React, {Component} from 'react';
-import {
-  TouchableOpacity,
-  Text,
-} from 'react-native';
+import React, { Component } from 'react';
+import { Text, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 
 import styleConstructor from './style';
-import {shouldUpdate} from '../../../component-updater';
+import { shouldUpdate } from '../../../component-updater';
 
 class Day extends Component {
   static displayName = 'IGNORE';
-  
+
   static propTypes = {
     // TODO: disabled props should be removed
     state: PropTypes.oneOf(['selected', 'disabled', 'today', '']),
-
+    // Optional function to format displayed numbers
+    formatNumber: PropTypes.func,
     // Specify theme properties to override specific styles for calendar parts. Default = {}
     theme: PropTypes.object,
     marking: PropTypes.any,
     onPress: PropTypes.func,
+    onLongPress: PropTypes.func,
     date: PropTypes.object
   };
 
   constructor(props) {
     super(props);
+
     this.style = styleConstructor(props.theme);
+
     this.onDayPress = this.onDayPress.bind(this);
     this.onDayLongPress = this.onDayLongPress.bind(this);
   }
@@ -50,10 +51,12 @@ class Day extends Component {
         marking: true
       };
     }
+
     const isDisabled = typeof marking.disabled !== 'undefined' ? marking.disabled : this.props.state === 'disabled';
 
     if (marking.selected) {
       containerStyle.push(this.style.selected);
+      textStyle.push(this.style.selectedText);
     } else if (isDisabled) {
       textStyle.push(this.style.disabledText);
     } else if (this.props.state === 'today') {
@@ -82,8 +85,12 @@ class Day extends Component {
         onLongPress={this.onDayLongPress}
         activeOpacity={marking.activeOpacity}
         disabled={marking.disableTouchEvent}
+        accessibilityRole={isDisabled ? undefined : 'button'}
+        accessibilityLabel={this.props.accessibilityLabel}
       >
-        <Text allowFontScaling={false} style={textStyle}>{String(this.props.children)}</Text>
+        <Text allowFontScaling={false} style={textStyle}>
+          {String(this.props.formatNumber ? this.props.formatNumber(this.props.children) : this.props.children)}
+        </Text>
       </TouchableOpacity>
     );
   }

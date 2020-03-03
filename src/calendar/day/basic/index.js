@@ -1,21 +1,19 @@
 import React, {Component} from 'react';
-import {
-  TouchableOpacity,
-  Text,
-  View
-} from 'react-native';
+import {View, TouchableOpacity, Text} from 'react-native';
 import PropTypes from 'prop-types';
 import {shouldUpdate} from '../../../component-updater';
 
 import styleConstructor from './style';
 
+
 class Day extends Component {
   static displayName = 'IGNORE';
-  
+
   static propTypes = {
     // TODO: disabled props should be removed
     state: PropTypes.oneOf(['disabled', 'today', '']),
-
+    // Optional function to format displayed numbers
+    formatNumber: PropTypes.func,
     // Specify theme properties to override specific styles for calendar parts. Default = {}
     theme: PropTypes.object,
     marking: PropTypes.any,
@@ -26,7 +24,9 @@ class Day extends Component {
 
   constructor(props) {
     super(props);
+
     this.style = styleConstructor(props.theme);
+
     this.onDayPress = this.onDayPress.bind(this);
     this.onDayLongPress = this.onDayLongPress.bind(this);
   }
@@ -53,7 +53,9 @@ class Day extends Component {
         marking: true
       };
     }
+
     const isDisabled = typeof marking.disabled !== 'undefined' ? marking.disabled : this.props.state === 'disabled';
+
     let dot;
     if (marking.marked) {
       dotStyle.push(this.style.visibleDot);
@@ -89,8 +91,12 @@ class Day extends Component {
         onLongPress={this.onDayLongPress}
         activeOpacity={marking.activeOpacity}
         disabled={marking.disableTouchEvent}
+        accessibilityRole={isDisabled ? undefined : 'button'}
+        accessibilityLabel={this.props.accessibilityLabel}
       >
-        <Text allowFontScaling={false} style={textStyle}>{String(this.props.children)}</Text>
+        <Text allowFontScaling={false} style={textStyle}>
+          {String(this.props.formatNumber ? this.props.formatNumber(this.props.children) : this.props.children)}
+        </Text>
         {dot}
       </TouchableOpacity>
     );
