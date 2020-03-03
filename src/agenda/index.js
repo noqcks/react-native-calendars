@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Text, View, Dimensions, Animated, ViewPropTypes} from 'react-native';
+import {Animated, Dimensions, Text, View, ViewPropTypes} from 'react-native';
 import PropTypes from 'prop-types';
 import XDate from 'xdate';
 
